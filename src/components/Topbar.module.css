@@ -1,0 +1,40 @@
+.topbar {
+  height: 103px;
+  background-color: #000000;
+  border-bottom: 1px solid #27272a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+}
+
+.pageTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.userEmail {
+  font-size: 0.85rem;
+  color: #a1a1aa;
+}
+
+.logoutButton {
+  background: transparent;
+  border: 1px solid #27272a;
+  color: #f97316;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.logoutButton:hover {
+  background-color: #27272a;
+}

@@ -1,0 +1,42 @@
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Individual sortable row wrapper */
+.item {
+  background: #0f1115;
+  border: 1px solid #1f2430;
+  border-radius: 14px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover (non-dragging) */
+.item:hover {
+  border-color: #2a2f3a;
+}
+
+/* While dragging */
+.dragging {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  transform: scale(1.01);
+  border-color: #f97316;
+}
+
+/* Ghost placeholder left behind */
+.placeholder {
+  background: rgba(255, 138, 0, 0.06);
+  border: 1px dashed rgba(255, 138, 0, 0.35);
+}
+
+/* Drag handle (if you add one in CategoryCard) */
+.handle {
+  cursor: grab;
+  color: #6b7280;
+}
+
+.handle:active {
+  cursor: grabbing;
+  color: #f97316;
+}

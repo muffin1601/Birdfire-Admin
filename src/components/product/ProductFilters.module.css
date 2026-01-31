@@ -1,0 +1,70 @@
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+/* Select + Inputs */
+.select,
+.input {
+  background: #0b0f14;
+  border: 1px solid #1f2937;
+  color: #eaecef;
+  padding: 8px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  outline: none;
+}
+
+.select {
+  min-width: 120px;
+}
+
+.input {
+  width: 120px;
+}
+
+/* Focus */
+.select:focus,
+.input:focus {
+  border-color: #f97316;
+}
+
+/* Apply button */
+.applyBtn {
+  background: #f97316;
+  color: #000;
+  border: none;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.applyBtn:hover {
+  background: #ff9f2d;
+}
+
+.applyBtn:active {
+  transform: translateY(1px);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .filters {
+    flex-wrap: wrap;
+  }
+
+  .input,
+  .select {
+    width: 100%;
+  }
+
+  .applyBtn {
+    width: 100%;
+  }
+}

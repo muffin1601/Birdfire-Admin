@@ -1,0 +1,109 @@
+/* Overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 60;
+}
+
+/* Drawer */
+.drawer {
+  width: 420px;
+  height: 100%;
+  background: #0f1115;
+  border-left: 1px solid #1f2430;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.25s ease;
+}
+
+/* Header */
+.header {
+  padding: 16px;
+  border-bottom: 1px solid #1f2430;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #eaecef;
+}
+
+.close {
+  background: transparent;
+  border: none;
+  color: #9aa4b2;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Body */
+.body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+/* Image */
+.image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 0px;
+  background: #161a20;
+}
+
+/* Fields */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field label {
+  font-size: 11px;
+  color: #9aa4b2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field p {
+  font-size: 14px;
+  color: #eaecef;
+}
+
+/* Status */
+.status {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* Animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,16 @@
+.section {
+  margin-top: 2.5rem;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e5e7eb;
+  margin-bottom: 0.75rem;
+}
+
+.content {
+  background-color: #000000;
+  border: 1px solid #27272a;
+  padding: 1.25rem;
+}
