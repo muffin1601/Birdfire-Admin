@@ -20,7 +20,7 @@ const EMPTY_FORM = {
   compare_price: "",
   stock: 0,
   category_id: "",
-  is_active: false, // 👈 default DRAFT
+  is_active: false,
   is_featured: false,
   is_new: false,
 };
@@ -34,27 +34,30 @@ export default function ProductDrawer({
   const [form, setForm] = useState(EMPTY_FORM);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
-  const [showMedia, setShowMedia] = useState(false); // 👈 toggle media
+  const [showMedia, setShowMedia] = useState(false);
 
-  /* Load product safely */
+  /* Load product */
   useEffect(() => {
-    if (product) {
-      setForm({ ...EMPTY_FORM, ...product });
-    } else {
+    if (!product) {
       setForm(EMPTY_FORM);
+      return;
     }
+
+    setForm({
+      ...EMPTY_FORM,
+      ...product,
+      is_active: Boolean(product.is_active),
+      is_featured: Boolean(product.is_featured),
+      is_new: Boolean(product.is_new),
+    });
   }, [product]);
+
 
   /* Load categories */
   useEffect(() => {
-    async function loadCategories() {
-      const res = await fetch("/api/categories", {
-        cache: "no-store",
-      });
-      const data = await res.json();
-      setCategories(Array.isArray(data) ? data : []);
-    }
-    loadCategories();
+    fetch("/api/categories", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => setCategories(Array.isArray(d) ? d : []));
   }, []);
 
   if (!open) return null;
@@ -66,9 +69,14 @@ export default function ProductDrawer({
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  async function handleSubmit(isDraft = false) {
+  async function handleSubmit(isDraft: boolean) {
     try {
       setLoading(true);
+
+      if (!form.price) {
+        alert("Price is required");
+        return;
+      }
 
       await fetch(
         product ? `/api/products/${product.id}` : "/api/products",
@@ -77,15 +85,20 @@ export default function ProductDrawer({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...form,
-            is_active: isDraft ? false : form.is_active,
+
+            is_active: Boolean(isDraft ? false : form.is_active),
+            is_featured: Boolean(form.is_featured),
+            is_new: Boolean(form.is_new),
+
+            price: form.price ? Number(form.price) : null,
+            compare_price: form.compare_price ? Number(form.compare_price) : null,
+
             availability_status:
-              Number(form.stock) > 0
-                ? "in_stock"
-                : "out_of_stock",
+              Number(form.stock) > 0 ? "in_stock" : "out_of_stock",
           }),
         }
       );
-
+      console.log(form.is_active, form.is_featured, form.is_new);
       onSaved();
       onClose();
     } finally {
@@ -108,184 +121,175 @@ export default function ProductDrawer({
 
         {/* BODY */}
         <div className={styles.body}>
-          {/* Category */}
-          <div className={styles.field}>
-            <label>Category</label>
-            <select
-              className={styles.input}
-              value={form.category_id}
-              onChange={(e) =>
-                updateField("category_id", e.target.value)
-              }
-            >
-              <option value="">Select category</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Name */}
-          <div className={styles.field}>
-            <label>Name</label>
-            <input
-              className={styles.input}
-              value={form.name}
-              onChange={(e) => {
-                const name = e.target.value;
-                updateField("name", name);
-                updateField(
-                  "slug",
-                  name.toLowerCase().replace(/\s+/g, "-")
-                );
-              }}
-            />
-          </div>
-
-          {/* Slug */}
-          <div className={styles.field}>
-            <label>Slug</label>
-            <input
-              className={styles.input}
-              value={form.slug}
-              disabled
-            />
-          </div>
-
-          {/* Descriptions */}
-          <div className={styles.field}>
-            <label>Short description</label>
-            <textarea
-              className={styles.textarea}
-              value={form.short_description}
-              onChange={(e) =>
-                updateField("short_description", e.target.value)
-              }
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label>Description</label>
-            <textarea
-              className={styles.textarea}
-              value={form.description}
-              onChange={(e) =>
-                updateField("description", e.target.value)
-              }
-            />
-          </div>
-
-          {/* Pricing */}
-          <div className={styles.fieldRow}>
-            <div className={styles.fieldInline}>
-              <label>Price</label>
-              <input
-                className={styles.input}
-                type="number"
-                value={form.price}
-                onChange={(e) =>
-                  updateField("price", e.target.value)
-                }
-              />
-            </div>
-
-            <div className={styles.fieldInline}>
-              <label>Compare price</label>
-              <input
-                className={styles.input}
-                type="number"
-                value={form.compare_price}
-                onChange={(e) =>
-                  updateField("compare_price", e.target.value)
-                }
-              />
-            </div>
-          </div>
-
-          {/* Stock */}
-          <div className={styles.field}>
-            <label>Stock</label>
-            <input
-              className={styles.input}
-              type="number"
-              value={form.stock}
-              onChange={(e) =>
-                updateField("stock", Number(e.target.value))
-              }
-            />
-          </div>
-
-          {/* Toggles */}
-          {[
-            ["Active", "is_active"],
-            ["Featured", "is_featured"],
-            ["New", "is_new"],
-          ].map(([label, key]) => (
-            <div className={styles.fieldRow} key={key}>
-              <div className={styles.fieldInline}>
-                <label>{label}</label>
-                <span className={styles.helper}>
-                  {(form as any)[key] ? "Yes" : "No"}
-                </span>
+          <div className={styles.columns}>
+            {/* LEFT COLUMN */}
+            <div className={styles.leftCol}>
+              {/* Category */}
+              <div className={styles.field}>
+                <label>Category</label>
+                <select
+                  className={styles.input}
+                  value={form.category_id}
+                  onChange={(e) =>
+                    updateField("category_id", e.target.value)
+                  }
+                >
+                  <option value="">Select category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <button
-                type="button"
-                className={`${styles.toggle} ${
-                  (form as any)[key]
-                    ? styles.on
-                    : styles.off
-                }`}
-                onClick={() =>
-                  updateField(
-                    key as keyof typeof form,
-                    !(form as any)[key]
-                  )
-                }
-              >
-                <span className={styles.knob} />
-              </button>
-            </div>
-          ))}
+              {/* Name */}
+              <div className={styles.field}>
+                <label>Name</label>
+                <input
+                  className={styles.input}
+                  value={form.name}
+                  onChange={(e) => {
+                    const name = e.target.value;
+                    updateField("name", name);
+                    updateField(
+                      "slug",
+                      name
+                        .toLowerCase()
+                        .trim()
+                        .replace(/[^\w\s-]/g, "")
+                        .replace(/\s+/g, "-")
+                    );
+                  }}
+                />
+              </div>
 
-          {/* MEDIA TOGGLE */}
-          <div className={styles.mediaToggle}>
-            <button
-              type="button"
-              className={styles.mediaBtn}
-              onClick={() => setShowMedia((v) => !v)}
-            >
-              {showMedia ? "Hide Media ▲" : "Add Media ▼"}
-            </button>
+              {/* Slug */}
+              <div className={styles.field}>
+                <label>Slug</label>
+                <input className={styles.input} value={form.slug} disabled />
+              </div>
+
+              {/* Descriptions */}
+              <div className={styles.field}>
+                <label>Short description</label>
+                <textarea
+                  className={styles.textarea}
+                  value={form.short_description}
+                  onChange={(e) =>
+                    updateField("short_description", e.target.value)
+                  }
+                />
+              </div>
+
+              <div className={styles.field}>
+                <label>Description</label>
+                <textarea
+                  className={styles.textarea}
+                  value={form.description}
+                  onChange={(e) =>
+                    updateField("description", e.target.value)
+                  }
+                />
+              </div>
+
+              {/* Pricing */}
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldInline}>
+                  <label>Price</label>
+                  <input
+                    className={styles.input}
+                    type="number"
+                    value={form.price}
+                    onChange={(e) =>
+                      updateField("price", e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className={styles.fieldInline}>
+                  <label>Compare price</label>
+                  <input
+                    className={styles.input}
+                    type="number"
+                    value={form.compare_price}
+                    onChange={(e) =>
+                      updateField("compare_price", e.target.value)
+                    }
+                  />
+                </div>
+                <div className={styles.fieldInline}>
+                  <label>Stock</label>
+                  <input
+                    className={styles.input}
+                    type="number"
+                    value={form.stock}
+                    onChange={(e) =>
+                      updateField("stock", Number(e.target.value))
+                    }
+                  />
+                </div>
+              </div>
+
+
+
+              {/* Toggles */}
+              {[
+                ["Active", "is_active"],
+                ["Featured", "is_featured"],
+                ["New", "is_new"],
+              ].map(([label, key]) => (
+                <div className={styles.fieldRow} key={key}>
+                  <div className={styles.fieldInline}>
+                    <label>{label}</label>
+                    <span className={styles.helper}>
+                      {(form as any)[key] ? "Yes" : "No"}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    className={`${styles.toggle} ${(form as any)[key] ? styles.on : styles.off
+                      }`}
+                    onClick={() =>
+                      updateField(
+                        key as keyof typeof form,
+                        !(form as any)[key]
+                      )
+                    }
+                  >
+                    <span className={styles.knob} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+
+
+            {/* RIGHT COLUMN (MEDIA) */}
+            <div className={styles.rightCol}>
+              <h3 style={{ fontSize: 14, color: "#eaecef" }}>
+                Product Media
+              </h3>
+              {product?.id ? (
+                <>
+                  <ProductImagesUploader
+                    productId={product.id}
+                    mode="primary"
+                  />
+                  <ProductImagesUploader
+                    productId={product.id}
+                    mode="gallery"
+                  />
+                </>
+              ) : (
+                <p className={styles.helper}>
+                  Save product first to upload images.
+                </p>
+              )}
+            </div>
           </div>
-
-          {/* MEDIA SECTION */}
-          {showMedia && product?.id && (
-            <div className={styles.mediaSection}>
-              <ProductImagesUploader
-                productId={product.id}
-                mode="primary"
-              />
-              <ProductImagesUploader
-                productId={product.id}
-                mode="secondary"
-              />
-              <ProductImagesUploader
-                productId={product.id}
-                mode="gallery"
-              />
-            </div>
-          )}
-
-          {showMedia && !product?.id && (
-            <p className={styles.helper}>
-              Save product first to upload images.
-            </p>
-          )}
         </div>
-
         {/* FOOTER */}
         <footer className={styles.footer}>
           <button

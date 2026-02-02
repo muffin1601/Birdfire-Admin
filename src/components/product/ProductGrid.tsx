@@ -1,105 +1,136 @@
 import styles from "./ProductGrid.module.css";
+import {
+  CheckCircle2,
+  Circle,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 
 export default function ProductGrid({
-  products,
+  products = [],
   onEdit,
   onDelete,
-  selected,
-  onToggleSelect,
-}: any) {
+}: {
+  products: any[];
+  onEdit: (p: any) => void;
+  onDelete: (p: any) => void;
+}) {
   return (
     <div className={styles.wrapper}>
       <table className={styles.table}>
-        <thead className={styles.thead}>
-          <tr className={styles.tr}>
-            <th className={styles.th}>
-              <input
-                className={styles.checkbox}
-                type="checkbox"
-                onChange={(e) =>
-                  onToggleSelect("ALL", e.target.checked)
-                }
-              />
-            </th>
-            <th className={styles.th}>Product</th>
-            <th className={styles.th}>Category</th>
-            <th className={styles.th}>Price</th>
-            <th className={styles.th}>Stock</th>
-            <th className={styles.th}>Status</th>
-            <th className={styles.th} />
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Last updated</th>
+            <th />
           </tr>
         </thead>
 
-        <tbody className={styles.tbody}>
-          {products.map((p: any) => {
-            const image =
-              p.product_images?.find((i: any) => i.is_primary)
-                ?.image_url;
+        <tbody>
+          {products.map((p) => {
+            const image = p.product_images?.find(
+              (i: any) => i.is_primary
+            )?.image_url;
+
+            const isActive = p.is_active;
 
             return (
-              <tr key={p.id} className={styles.tr}>
-                <td className={styles.td}>
-                  <input
-                    className={styles.checkbox}
-                    type="checkbox"
-                    checked={selected.includes(p.id)}
-                    onChange={(e) =>
-                      onToggleSelect(p.id, e.target.checked)
-                    }
-                  />
-                </td>
-
-                <td className={styles.td}>
+              <tr key={p.id}>
+                {/* PRODUCT */}
+                <td>
                   <div className={styles.productCell}>
                     {image && (
                       <img
-                        className={styles.thumbnail}
                         src={image}
                         alt={p.name}
+                        className={styles.thumbnail}
                       />
                     )}
-                    <span className={styles.productName}>
-                      {p.name}
-                    </span>
+
+                    <div className={styles.meta}>
+                      <div className={styles.nameRow}>
+                        <span className={styles.name}>
+                          {p.name}
+                        </span>
+
+                        <span
+                          className={`${styles.statusInline} ${
+                            isActive
+                              ? styles.active
+                              : styles.draft
+                          }`}
+                        >
+                          {isActive ? (
+                            <CheckCircle2 size={14} />
+                          ) : (
+                            <Circle size={14} />
+                          )}
+                          {isActive ? "Active" : "Draft"}
+                        </span>
+                      </div>
+
+                      {p.short_description && (
+                        <div className={styles.desc}>
+                          {p.short_description}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </td>
 
-                <td className={styles.td}>
+                {/* CATEGORY */}
+                <td className={styles.muted}>
                   {p.categories?.name ?? "—"}
                 </td>
 
-                <td className={styles.td}>
-                  ${p.price}
-                </td>
-
-                <td className={styles.td}>
+                {/* STATUS (kept for scanning) */}
+                <td>
                   <span
-                    className={`${styles.stock} ${
-                      p.stock > 0
-                        ? styles.inStock
-                        : styles.outStock
+                    className={`${styles.status} ${
+                      isActive
+                        ? styles.active
+                        : styles.draft
                     }`}
                   >
-                    {p.stock > 0 ? "In stock" : "Out"}
+                    {isActive ? "Active" : "Draft"}
                   </span>
                 </td>
 
-                <td className={styles.td}>
-                  {p.is_active ? "Active" : "Draft"}
+                {/* UPDATED */}
+                <td className={styles.muted}>
+                  {p.updated_at
+                    ? new Date(
+                        p.updated_at
+                      ).toLocaleDateString()
+                    : "—"}
                 </td>
 
-                <td className={styles.td}>
+                {/* ACTIONS */}
+                <td>
                   <div className={styles.actions}>
                     <button
-                      className={styles.actionBtn}
+                      className={styles.edit}
                       onClick={() => onEdit(p)}
                     >
+                      <Pencil size={16} />
                       Edit
                     </button>
+
                     <button
-                      className={styles.actionBtn}
-                      onClick={() => onDelete(p)}
+                      className={styles.delete}
+                      onClick={() => {
+                        const ok = window.confirm(
+                          `Delete "${p.name}"?\n\nThis action cannot be undone.`
+                        );
+
+                        if (!ok) return;
+
+                        onDelete(p);
+                      }}
                     >
+                      <Trash2 size={16} />
                       Delete
                     </button>
                   </div>
@@ -107,6 +138,14 @@ export default function ProductGrid({
               </tr>
             );
           })}
+
+          {products.length === 0 && (
+            <tr>
+              <td colSpan={5} className={styles.empty}>
+                No products found
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

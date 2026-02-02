@@ -1,67 +1,106 @@
+/* Wrapper */
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
+/* Section title */
 .header {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: #eaecef;
+  letter-spacing: 0.2px;
 }
+
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
 }
 
+
 .thumb {
-  width: 100%;
-  height: 90px;
+  position: relative;
+  height: 200px;
   background: #111827;
   border: 1px solid #1f2937;
   border-radius: 0px;
   overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.thumb:hover {
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.35);
 }
 
 .thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
+/* Delete button */
+.deleteButton {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(15, 17, 21, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #eaecef;
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 7px;
+  border-radius: 0px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.thumb:hover .deleteButton {
+  opacity: 1;
+}
+
+.deleteButton:hover {
+  background: rgba(249, 115, 22, 0.9);
+  color: #000;
+}
+
+/* Upload box */
 .uploadBox {
-  height: 90px;
+  height: 200px;
   border: 1px dashed #2a2f3a;
+  border-radius: 0px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 13px;
   color: #9aa4b2;
   cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease,
+    background 0.15s ease;
+  text-align: center;
 }
 
 .uploadBox:hover {
   border-color: #f97316;
   color: #f97316;
+  background: rgba(249, 115, 22, 0.06);
 }
 
 .uploadBox input {
   display: none;
 }
 
+/* Helper text */
 .helper {
   font-size: 12px;
-  color: #6b7280;
+  color: #9aa4b2;
 }
-.deleteButton {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background: rgba(0, 0, 0, 0.6);
-  border: none;
+
+.helper strong {
   color: #eaecef;
-  font-size: 12px;
-  padding: 2px 6px;
-  cursor: pointer;
 }

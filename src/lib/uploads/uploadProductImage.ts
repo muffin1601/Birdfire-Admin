@@ -7,6 +7,24 @@ type UploadArgs = {
   altText?: string;
 };
 
+
+export async function uploadTempProductImage(file: File) {
+  const ext = file.name.split(".").pop();
+  const filePath = `temp/products/${crypto.randomUUID()}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from("product-images")
+    .upload(filePath, file);
+
+  if (error) throw error;
+
+  const { data } = supabase.storage
+    .from("product-images")
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+}
+
 export async function uploadProductImage({
   file,
   productId,
@@ -26,37 +44,19 @@ export async function uploadProductImage({
     .from("product-images")
     .getPublicUrl(filePath);
 
-  const imageUrl = data.publicUrl;
-
-  // 1️⃣ insert image row
   const { data: image, error } = await supabase
     .from("product_images")
     .insert({
       product_id: productId,
-      image_url: imageUrl,
+      image_url: data.publicUrl,
       alt_text: altText ?? "",
-      is_primary: mode === "primary",
       image_type: mode,
+      is_primary: mode === "primary",
     })
     .select()
     .single();
 
   if (error) throw error;
-
-  // 2️⃣ wire product primary / secondary automatically
-  if (mode === "primary") {
-    await supabase
-      .from("products")
-      .update({ primary_image_id: image.id })
-      .eq("id", productId);
-  }
-
-  if (mode === "secondary") {
-    await supabase
-      .from("products")
-      .update({ secondary_image_id: image.id })
-      .eq("id", productId);
-  }
 
   return image;
 }

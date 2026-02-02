@@ -1,49 +1,93 @@
 .filters {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #0d0f13;
+  border: 1px solid #1f2430;
+  border-radius: 0px;
 }
 
-/* Select + Inputs */
-.select,
-.input {
-  background: #0b0f14;
-  border: 1px solid #1f2937;
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.selectWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+.icon {
+  position: absolute;
+  left: 12px;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.search {
+  flex: 1;
+  background: #161a20;
+  border: 1px solid #232938;
+  padding: 10px 14px 10px 36px;
+  font-size: 14px;
   color: #eaecef;
-  padding: 8px 10px;
-  font-size: 13px;
-  border-radius: 6px;
+  border-radius: 0px;
+}
+
+.search::placeholder {
+  color: #6b7280;
+}
+
+.search:focus {
   outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.35);
 }
 
 .select {
-  min-width: 120px;
+  min-width: 150px;
+  background: #161a20;
+  border: 1px solid #232938;
+  padding: 10px 12px 10px 36px;
+  font-size: 14px;
+  color: #eaecef;
+  border-radius: 0px;
+  cursor: pointer;
 }
 
-.input {
-  width: 120px;
-}
-
-/* Focus */
-.select:focus,
-.input:focus {
+.select:focus {
+  outline: none;
   border-color: #f97316;
+  box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.35);
 }
 
-/* Apply button */
+.inputWrap:focus-within .icon,
+.selectWrap:focus-within .icon {
+  color: #f97316;
+}
+
 .applyBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
   background: #f97316;
   color: #000;
-  border: none;
-  padding: 8px 14px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  border-radius: 6px;
+  border: none;
+  border-radius: 0px;
+  white-space: nowrap;
+  flex-shrink: 0;
   cursor: pointer;
-  transition: background 0.15s ease,
-    transform 0.15s ease;
+  transition: background 0.15s ease, transform 0.05s ease;
 }
+
 
 .applyBtn:hover {
   background: #ff9f2d;
@@ -53,17 +97,13 @@
   transform: translateY(1px);
 }
 
-/* Responsive */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .filters {
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .input,
-  .select {
-    width: 100%;
-  }
-
+  .select,
   .applyBtn {
     width: 100%;
   }

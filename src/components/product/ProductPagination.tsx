@@ -1,3 +1,5 @@
+import styles from "./ProductPagination.module.css";
+
 export default function ProductPagination({
   page,
   totalPages,
@@ -6,23 +8,25 @@ export default function ProductPagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div style={{ marginTop: 16 }}>
+    <div className={styles.pagination}>
       <button
+        className={styles.button}
         disabled={page === 1}
         onClick={() => onChange(page - 1)}
       >
-        Prev
+        ← Prev
       </button>
 
-      <span style={{ margin: "0 8px" }}>
-        Page {page} / {totalPages}
+      <span className={styles.pageInfo}>
+        Page <strong>{page}</strong> of <strong>{totalPages}</strong>
       </span>
 
       <button
+        className={styles.button}
         disabled={page === totalPages}
         onClick={() => onChange(page + 1)}
       >
-        Next
+        Next →
       </button>
     </div>
   );

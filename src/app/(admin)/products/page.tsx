@@ -2,6 +2,8 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import ProductsClient from "./ProductsClient";
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProductsPage() {
   await requireAdmin();
 
@@ -22,10 +24,9 @@ export default async function ProductsPage() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error(error);
+    console.error("Products fetch error:", error);
   }
 
-  return (
-    <ProductsClient initialProducts={products ?? []} />
-  );
+  return <ProductsClient initialProducts={products ?? []} />;
 }
+

@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase/client";
 
 type Props = {
   productId: string;
-  mode: "primary" | "secondary" | "gallery";
+  mode: "primary" | "gallery";
 };
 
 export default function ProductImagesUploader({
@@ -29,8 +29,8 @@ export default function ProductImagesUploader({
   }
 
   useEffect(() => {
-    loadImages();
-  }, []);
+    if (productId) loadImages();
+  }, [productId, mode]);
 
   async function handleUpload(
     e: React.ChangeEvent<HTMLInputElement>
@@ -39,40 +39,65 @@ export default function ProductImagesUploader({
     if (!file) return;
 
     setLoading(true);
+
+    // 🔒 Enforce ONE primary image
+    if (mode === "primary" && images.length > 0) {
+      alert("Only one primary image is allowed.");
+      setLoading(false);
+      return;
+    }
+
     await uploadProductImage({
       file,
       productId,
       mode,
       altText: "Product image",
     });
+
     await loadImages();
     setLoading(false);
+  }
+
+  async function handleDelete(img: any) {
+    // delete db row
+    await supabase
+      .from("product_images")
+      .delete()
+      .eq("id", img.id);
+
+    // delete file from storage
+    const path = img.image_url.split("/product-images/")[1];
+    if (path) {
+      await supabase.storage
+        .from("product-images")
+        .remove([path]);
+    }
+
+    await loadImages();
   }
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
-        <span className={styles.title}>
-          {mode === "primary"
-            ? "Primary Image"
-            : mode === "secondary"
-            ? "Secondary Image"
-            : "Gallery Images"}
-        </span>
+        {mode === "primary" ? "Primary Image" : "Gallery Images"}
       </div>
 
       <div className={styles.grid}>
         {images.map((img) => (
           <div key={img.id} className={styles.thumb}>
             <img src={img.image_url} alt="" />
+            <button
+              className={styles.deleteButton}
+              onClick={() => handleDelete(img)}
+            >
+              ✕
+            </button>
           </div>
         ))}
 
         {(mode === "gallery" || images.length === 0) && (
           <label className={styles.uploadBox}>
-            <span>
-              {loading ? "Uploading…" : "+ Add image"}
-            </span>
+            {loading ? "Uploading…" : "+ Add image"}
             <input
               type="file"
               accept="image/*"
@@ -86,7 +111,7 @@ export default function ProductImagesUploader({
       <span className={styles.helper}>
         {mode === "gallery"
           ? "Multiple images allowed"
-          : "Only one image allowed"}
+          : "Only one primary image"}
       </span>
     </div>
   );
