@@ -273,19 +273,12 @@ export default function ProductDrawer({
               </h3>
               {product?.id ? (
                 <>
-                  <ProductImagesUploader
-                    productId={product.id}
-                    mode="primary"
-                  />
-                  <ProductImagesUploader
-                    productId={product.id}
-                    mode="gallery"
-                  />
+                  <ProductImagesUploader productId={product.id} mode="primary" />
+                  <ProductImagesUploader productId={product.id} mode="secondary" />
+                  <ProductImagesUploader productId={product.id} mode="gallery" />
                 </>
               ) : (
-                <p className={styles.helper}>
-                  Save product first to upload images.
-                </p>
+                <p className={styles.helper}>Save product first to upload images.</p>
               )}
             </div>
           </div>

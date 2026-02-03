@@ -7,13 +7,10 @@ import { supabase } from "@/lib/supabase/client";
 
 type Props = {
   productId: string;
-  mode: "primary" | "gallery";
+  mode: "primary" | "secondary" | "gallery";
 };
 
-export default function ProductImagesUploader({
-  productId,
-  mode,
-}: Props) {
+export default function ProductImagesUploader({ productId, mode }: Props) {
   const [images, setImages] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -32,20 +29,16 @@ export default function ProductImagesUploader({
     if (productId) loadImages();
   }, [productId, mode]);
 
-  async function handleUpload(
-    e: React.ChangeEvent<HTMLInputElement>
-  ) {
+  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setLoading(true);
-
-    // 🔒 Enforce ONE primary image
-    if (mode === "primary" && images.length > 0) {
-      alert("Only one primary image is allowed.");
-      setLoading(false);
+    if ((mode === "primary" || mode === "secondary") && images.length > 0) {
+      alert(`Only one ${mode} image allowed`);
       return;
     }
+
+    setLoading(true);
 
     await uploadProductImage({
       file,
@@ -59,18 +52,11 @@ export default function ProductImagesUploader({
   }
 
   async function handleDelete(img: any) {
-    // delete db row
-    await supabase
-      .from("product_images")
-      .delete()
-      .eq("id", img.id);
+    await supabase.from("product_images").delete().eq("id", img.id);
 
-    // delete file from storage
     const path = img.image_url.split("/product-images/")[1];
     if (path) {
-      await supabase.storage
-        .from("product-images")
-        .remove([path]);
+      await supabase.storage.from("product-images").remove([path]);
     }
 
     await loadImages();
@@ -79,7 +65,9 @@ export default function ProductImagesUploader({
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
-        {mode === "primary" ? "Primary Image" : "Gallery Images"}
+        {mode === "primary" && "Primary Image"}
+        {mode === "secondary" && "Secondary Image"}
+        {mode === "gallery" && "Gallery Images"}
       </div>
 
       <div className={styles.grid}>
@@ -109,9 +97,7 @@ export default function ProductImagesUploader({
       </div>
 
       <span className={styles.helper}>
-        {mode === "gallery"
-          ? "Multiple images allowed"
-          : "Only one primary image"}
+        {mode === "gallery" ? "Multiple images allowed" : "Only one image allowed"}
       </span>
     </div>
   );
