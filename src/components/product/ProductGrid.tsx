@@ -24,7 +24,7 @@ export default function ProductGrid({
             <th>Category</th>
             <th>Status</th>
             <th>Last updated</th>
-            <th />
+            <th>Actions</th> 
           </tr>
         </thead>
 
