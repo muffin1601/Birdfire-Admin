@@ -8,26 +8,15 @@ export async function GET() {
   const supabase = createSupabaseServer();
 
   const { data, error } = await supabase
-    .from('categories')
-    .select(`
-      *,
-      products:products(count)
-    `)
+    .from('collections')
+    .select('*')
     .order('sort_order', { ascending: true });
 
   if (error) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  const categoriesWithCount = (data ?? []).map((category) => ({
-    ...category,
-    product_count: category.products?.[0]?.count ?? 0,
-  }));
-
-  return NextResponse.json(categoriesWithCount);
+  return NextResponse.json(data);
 }
 
 
@@ -38,7 +27,7 @@ export async function POST(req: Request) {
   const body = await req.json();
 
   const { data, error } = await supabase
-    .from('categories')
+    .from('collections')
     .insert({
       name: body.name,
       slug: body.slug,

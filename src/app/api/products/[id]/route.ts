@@ -18,6 +18,7 @@ export async function PATCH(
     short_description: body.short_description,
     description: body.description,
     category_id: body.category_id || null,
+    collection_id:body.collection_id || null,
     stock: Number(body.stock) || 0,
 
     price:
@@ -62,7 +63,7 @@ export async function DELETE(
   await requireAdmin();
   const supabase = createSupabaseServer();
 
-  const { id } = await params; // ✅ REQUIRED
+  const { id } = await params; 
 
   await supabase.from("product_images").delete().eq("product_id", id);
   await supabase.from("products").delete().eq("id", id);

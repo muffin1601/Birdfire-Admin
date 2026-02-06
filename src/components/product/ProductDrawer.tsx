@@ -20,6 +20,7 @@ const EMPTY_FORM = {
   compare_price: "",
   stock: 0,
   category_id: "",
+  collection_id: "",
   is_active: false,
   is_featured: false,
   is_new: false,
@@ -34,6 +35,7 @@ export default function ProductDrawer({
   const [form, setForm] = useState(EMPTY_FORM);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
+  const [collections, setCollections] = useState<any[]>([]);
   const [showMedia, setShowMedia] = useState(false);
 
   /* Load product */
@@ -58,6 +60,13 @@ export default function ProductDrawer({
     fetch("/api/categories", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setCategories(Array.isArray(d) ? d : []));
+  }, []);
+
+  /* Load collections */
+  useEffect(() => {
+    fetch("/api/collections", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => setCollections(Array.isArray(d) ? d : []));
   }, []);
 
   if (!open) return null;
@@ -138,6 +147,24 @@ export default function ProductDrawer({
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.field}>
+                <label>Collection</label>
+                <select
+                  className={styles.input}
+                  value={form.collection_id}
+                  onChange={(e) =>
+                    updateField("collection_id", e.target.value)
+                  }
+                >
+                  <option value="">Select collection</option>
+                  {collections.map((col) => (
+                    <option key={col.id} value={col.id}>
+                      {col.name}
                     </option>
                   ))}
                 </select>
@@ -263,8 +290,6 @@ export default function ProductDrawer({
                 </div>
               ))}
             </div>
-
-
 
             {/* RIGHT COLUMN (MEDIA) */}
             <div className={styles.rightCol}>

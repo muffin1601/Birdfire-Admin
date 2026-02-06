@@ -46,6 +46,11 @@ export async function GET(req: Request) {
     query = query.eq("category_id", category);
   }
 
+  const collection = searchParams.get("collection");
+  if (collection) {
+    query = query.eq("collection_id", collection);
+  }
+
   const { data, error } = await query;
 
   if (error) {

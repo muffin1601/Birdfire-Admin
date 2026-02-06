@@ -1,0 +1,100 @@
+.page {
+  padding: 0px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #eaecef;
+}
+
+/* Primary CTA */
+.addBtn {
+  background: #f97316;
+  color: #000;
+  border: none;
+  border-radius: 0px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.addBtn:hover {
+  background: #ff9f2d;
+}
+
+.addBtn:active {
+  transform: translateY(1px);
+}
+
+/* Empty State */
+.emptyState {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  color: #9aa4b2;
+}
+
+.emptyState p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #eaecef;
+}
+
+.emptyState span {
+  font-size: 13px;
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+/* Empty CTA */
+.emptyCta {
+  margin-top: 12px;
+  background: transparent;
+  border: 1px dashed #f97316;
+  color: #f97316;
+  border-radius: 0px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.emptyCta:hover {
+  background: rgba(255, 138, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .page {
+    padding: 16px;
+  }
+
+  .header h1 {
+    font-size: 18px;
+  }
+}
+@media (max-width: 480px) {
+  .addBtn,
+  .emptyCta {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}

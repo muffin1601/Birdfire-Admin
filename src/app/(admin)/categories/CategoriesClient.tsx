@@ -89,7 +89,6 @@ export default function CategoriesClient({
         />
       )}
 
-      {/* Edit / Create Drawer */}
       <CategoryDrawer
         key={selectedCategory?.id ?? 'new'}
         open={drawerOpen}

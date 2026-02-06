@@ -17,7 +17,10 @@ export default function ProductFilters({ onChange }: Props) {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [category, setCategory] = useState("");
+  const [collection, setCollection] = useState("");
+
   const [categories, setCategories] = useState<any[]>([]);
+  const [collections, setCollections] = useState<any[]>([]);
 
   /* Load categories */
   useEffect(() => {
@@ -26,16 +29,26 @@ export default function ProductFilters({ onChange }: Props) {
       .then((d) => setCategories(Array.isArray(d) ? d : []));
   }, []);
 
+  /* Load collections */
+  useEffect(() => {
+    fetch("/api/collections", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => setCollections(Array.isArray(d) ? d : []));
+  }, []);
+
+
   function apply(overrides?: Partial<Record<string, string>>) {
     const filters: Record<string, string> = {
       ...(query ? { q: query } : {}),
       ...(status ? { active: status } : {}),
       ...(category ? { category } : {}),
+      ...(collection ? { collection } : {}),
       ...overrides,
     };
 
     onChange(filters);
   }
+
 
   return (
     <div className={styles.filters}>
@@ -71,6 +84,8 @@ export default function ProductFilters({ onChange }: Props) {
         </select>
       </div>
 
+
+
       {/* Category */}
       <div className={styles.selectWrap}>
         <Layers size={16} className={styles.icon} />
@@ -86,6 +101,26 @@ export default function ProductFilters({ onChange }: Props) {
           {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
               {cat.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Collection */}
+      <div className={styles.selectWrap}>
+        <Layers size={16} className={styles.icon} />
+        <select
+          className={styles.select}
+          value={collection}
+          onChange={(e) => {
+            setCollection(e.target.value);
+            apply({ collection: e.target.value || "" });
+          }}
+        >
+          <option value="">All collections</option>
+          {collections.map((col) => (
+            <option key={col.id} value={col.id}>
+              {col.name}
             </option>
           ))}
         </select>

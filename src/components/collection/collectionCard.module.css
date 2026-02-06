@@ -1,0 +1,218 @@
+.card {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 0px;
+  background: #0f1115;
+  border: 1px solid #1f2430;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.card:hover {
+  border-color: #2a2f3a;
+}
+
+/* Dragging */
+.cardDragging {
+  border-color: #ff8a00;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.55);
+  background: #12151c;
+  transform: scale(1.01);
+}
+
+/* Drag handle */
+.dragHandle {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  cursor: grab;
+}
+
+.dragHandle:hover {
+  color: #ff8a00;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+/* Image */
+.imageWrap {
+  width: 100px;
+  height: 100px;
+  border-radius: 0px;
+  overflow: hidden;
+  background: #161a20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.imageWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  font-size: 11px;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* Content */
+.content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.content h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #eaecef;
+  margin: 0;
+}
+
+.slug {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Description */
+.description {
+  font-size: 13px;
+  color: #9aa4b2;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  max-width: 520px;
+}
+
+/* Status */
+.status {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* Footer / Meta */
+.meta {
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.products {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #9aa4b2;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.actions button {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.actions button:hover {
+  background: rgba(249, 115, 22, 0.1);
+  color: #f97316;
+}
+
+.actions .danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+.actions button:disabled {
+  color: #3b4251;
+  cursor: not-allowed;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 6px;
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+/* Reveal actions on hover or keyboard focus */
+.card:hover .actions,
+.card:focus-within .actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.actions button {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.actions button:hover {
+  background: rgba(255, 138, 0, 0.12);
+  color: #ff8a00;
+}
+
+.actions button:focus-visible {
+  outline: 2px solid #ff8a00;
+  outline-offset: 2px;
+}
+
+.actions .danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+.actions button:disabled {
+  color: #3b4251;
+  cursor: not-allowed;
+}
