@@ -22,6 +22,7 @@ export default function ProductGrid({
           <tr>
             <th>Product</th>
             <th>Category</th>
+            <th>Collection</th>
             <th>Status</th>
             <th>Last updated</th>
             <th>Actions</th> 
@@ -84,8 +85,11 @@ export default function ProductGrid({
                 <td className={styles.muted}>
                   {p.categories?.name ?? "—"}
                 </td>
-
-                {/* STATUS (kept for scanning) */}
+                
+                <td className={styles.muted}>
+                  {p.collections?.name ?? "—"}
+                </td>
+               
                 <td>
                   <span
                     className={`${styles.status} ${

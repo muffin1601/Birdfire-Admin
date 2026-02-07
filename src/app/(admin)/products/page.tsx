@@ -14,6 +14,7 @@ export default async function ProductsPage() {
     .select(`
       *,
       categories(name),
+      collections(name),
       product_images (
         id,
         image_url,

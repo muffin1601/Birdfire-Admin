@@ -14,6 +14,7 @@ export async function GET(req: Request) {
       `
       *,
       categories(name),
+      collections(name),
       product_images:product_images!product_images_product_id_fkey (
         id,
         image_url,
