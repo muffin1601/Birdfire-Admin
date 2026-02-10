@@ -14,7 +14,7 @@ export default async function CollectionsPage() {
     *,
     products:products(count)
   `)
-    .order('sort_order', { ascending: true });
+    .order('created_at', { ascending: false });
 
   const collectionsWithCount = (data ?? []).map((cat) => ({
     ...cat,

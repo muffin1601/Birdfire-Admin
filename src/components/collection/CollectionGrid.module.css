@@ -4,7 +4,7 @@
   gap: 10px;
 }
 
-/* Individual sortable row wrapper */
+
 .item {
   background: #0f1115;
   border: 1px solid #1f2430;
@@ -12,25 +12,25 @@
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* Hover (non-dragging) */
+
 .item:hover {
   border-color: #2a2f3a;
 }
 
-/* While dragging */
+
 .dragging {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
   transform: scale(1.01);
   border-color: #f97316;
 }
 
-/* Ghost placeholder left behind */
+
 .placeholder {
   background: rgba(255, 138, 0, 0.06);
   border: 1px dashed rgba(255, 138, 0, 0.35);
 }
 
-/* Drag handle (if you add one in CollectionCard) */
+
 .handle {
   cursor: grab;
   color: #6b7280;
@@ -39,4 +39,73 @@
 .handle:active {
   cursor: grabbing;
   color: #f97316;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.pagination button {
+  background: #0f1115;
+  border: 1px solid #1f2430;
+  color: #e5e7eb;
+  padding: 8px 16px;
+  border-radius: 0px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease,
+              color 0.2s ease,
+              transform 0.15s ease,
+              box-shadow 0.15s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  border-color: #f97316;
+  color: #f97316;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.25);
+  transform: translateY(-1px);
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  min-width: 60px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #9ca3af;
+}
+
+.searchWrap {
+  margin-bottom: 14px;
+}
+
+.searchWrap input {
+  width: 100%;
+  background: #0f1115;
+  border: 1px solid #1f2430;
+  border-radius: 0px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #e5e7eb;
+  outline: none;
+  transition: border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.searchWrap input::placeholder {
+  color: #6b7280;
+}
+
+.searchWrap input:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.25);
 }

@@ -55,19 +55,25 @@ export default function ProductDrawer({
   }, [product]);
 
 
-  /* Load categories */
-  useEffect(() => {
-    fetch("/api/categories", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => setCategories(Array.isArray(d) ? d : []));
-  }, []);
+ useEffect(() => {
+  fetch('/api/categories', { cache: 'no-store' })
+    .then(r => r.json())
+    .then(d =>
+      setCategories(
+        Array.isArray(d) ? d.filter(c => c.is_active) : []
+      )
+    );
+}, []);
 
-  /* Load collections */
-  useEffect(() => {
-    fetch("/api/collections", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => setCollections(Array.isArray(d) ? d : []));
-  }, []);
+useEffect(() => {
+  fetch('/api/collections', { cache: 'no-store' })
+    .then(r => r.json())
+    .then(d =>
+      setCollections(
+        Array.isArray(d) ? d.filter(c => c.is_active) : []
+      )
+    );
+}, []);
 
   if (!open) return null;
 

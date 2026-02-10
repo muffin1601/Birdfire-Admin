@@ -1,9 +1,7 @@
 'use client';
 
-import {
-  DndContext,
-  closestCenter,
-} from '@dnd-kit/core';
+import { useMemo, useState } from 'react';
+import { DndContext, closestCenter } from '@dnd-kit/core';
 import {
   SortableContext,
   arrayMove,
@@ -21,6 +19,8 @@ type Props = {
   onView?: (collection: any) => void;
 };
 
+const PAGE_SIZE = 8;
+
 export default function CollectionGrid({
   collections,
   setCollections,
@@ -28,30 +28,63 @@ export default function CollectionGrid({
   onDelete,
   onView,
 }: Props) {
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
+
+  const sortedCollections = useMemo(
+    () => [...collections].reverse(),
+    [collections]
+  );
+
+  const filteredCollections = useMemo(() => {
+    if (!query) return sortedCollections;
+    return sortedCollections.filter(c =>
+      c.name?.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [sortedCollections, query]);
+
+  const totalPages = Math.ceil(
+    filteredCollections.length / PAGE_SIZE
+  );
+
+  const paginatedCollections = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredCollections.slice(
+      start,
+      start + PAGE_SIZE
+    );
+  }, [filteredCollections, page]);
+
   function handleDragEnd(event: any) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = collections.findIndex(
-      (c) => c.id === active.id
-    );
-    const newIndex = collections.findIndex(
-      (c) => c.id === over.id
-    );
+    const pageIds = paginatedCollections.map(c => c.id);
+    const oldIndex = pageIds.indexOf(active.id);
+    const newIndex = pageIds.indexOf(over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
 
-    const reordered = arrayMove(
-      collections,
+    const updatedPage = arrayMove(
+      paginatedCollections,
       oldIndex,
       newIndex
     );
 
-    setCollections(reordered);
+    const updatedAll = [...sortedCollections];
+    const globalStart = (page - 1) * PAGE_SIZE;
+
+    updatedPage.forEach((item, i) => {
+      updatedAll[globalStart + i] = item;
+    });
+
+    const finalList = [...updatedAll].reverse();
+    setCollections(finalList);
 
     fetch('/api/collections/reorder', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
-        reordered.map((c, i) => ({
+        finalList.map((c, i) => ({
           id: c.id,
           sort_order: i,
         }))
@@ -60,26 +93,62 @@ export default function CollectionGrid({
   }
 
   return (
-    <DndContext
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext
-        items={collections.map((c) => c.id)}
-        strategy={verticalListSortingStrategy}
+    <>
+      <div className={styles.searchWrap}>
+        <input
+          type="text"
+          placeholder="Search collections…"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setPage(1);
+          }}
+        />
+      </div>
+
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
       >
-        <div className={styles.grid}>
-          {collections.map((collection) => (
-            <CollectionCard
-              key={collection.id}
-              collection={collection}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onView={onView}
-            />
-          ))}
+        <SortableContext
+          items={paginatedCollections.map(c => c.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className={styles.grid}>
+            {paginatedCollections.map(collection => (
+              <CollectionCard
+                key={collection.id}
+                collection={collection}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onView={onView}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(p => p - 1)}
+          >
+            Prev
+          </button>
+
+          <span>
+            {page} / {totalPages}
+          </span>
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage(p => p + 1)}
+          >
+            Next
+          </button>
         </div>
-      </SortableContext>
-    </DndContext>
+      )}
+    </>
   );
 }
