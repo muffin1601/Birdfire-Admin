@@ -21,6 +21,7 @@ export default function ProductGrid({
         <thead>
           <tr>
             <th>Product</th>
+            <th>Price</th>
             <th>Category</th>
             <th>Collection</th>
             <th>Status</th>
@@ -80,6 +81,8 @@ export default function ProductGrid({
                     </div>
                   </div>
                 </td>
+
+                <td className={styles.muted}>₹{p.price.toFixed(2)}</td>
 
                 {/* CATEGORY */}
                 <td className={styles.muted}>
