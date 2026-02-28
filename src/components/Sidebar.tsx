@@ -16,14 +16,14 @@ const navSections = [
       { label: 'Categories', href: '/categories' },
       { label: 'Products', href: '/products' },
       { label: 'Collections', href: '/collections'},
-      { label: 'Orders', href: '/orders' },
-      { label: 'Users', href: '/users' },
+      { label: 'Orders', href: '#' },
+      { label: 'Users', href: '#' },
     ],
   },
   {
     title: 'System',
     items: [
-      { label: 'Settings', href: '/settings' },
+      { label: 'Settings', href: '#' },
     ],
   },
 ];
