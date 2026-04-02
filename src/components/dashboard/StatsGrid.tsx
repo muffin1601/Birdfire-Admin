@@ -7,31 +7,38 @@ import {
   Users,
 } from 'lucide-react';
 
-export default function StatsGrid() {
+interface StatsProps {
+  totalRevenue: number;
+  ordersCount: number;
+  productsCount: number;
+  customersCount: number;
+}
+
+export default function StatsGrid({ totalRevenue, ordersCount, productsCount, customersCount }: StatsProps) {
   return (
     <section className={styles.grid}>
       <StatCard
         label="Total Revenue"
-        value="$24,500"
+        value={`$${totalRevenue.toLocaleString()}`}
         icon={<DollarSign />}
         color="green"
         hint="+12% this month"
       />
       <StatCard
         label="Orders"
-        value="1,245"
+        value={ordersCount.toLocaleString()}
         icon={<ShoppingCart />}
         color="blue"
       />
       <StatCard
         label="Products"
-        value="320"
+        value={productsCount.toLocaleString()}
         icon={<Package />}
         color="purple"
       />
       <StatCard
         label="Customers"
-        value="890"
+        value={customersCount.toLocaleString()}
         icon={<Users />}
         color="orange"
       />

@@ -14,8 +14,14 @@ export function createSupabaseServer() {
           
           return (await cookieStore).getAll();
         },
-        setAll() {
-          
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(async ({ name, value, options }) => {
+              (await cookieStore).set(name, value, options);
+            });
+          } catch (error) {
+            // handle error when called from Server Component
+          }
         },
       },
     }

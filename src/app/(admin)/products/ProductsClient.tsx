@@ -21,25 +21,7 @@ export default function ProductsClient({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
-  const [selected, setSelected] = useState<string[]>([]);
 
-  // function handleToggleSelect(id: string | "ALL", checked: boolean) {
-  //   if (id === "ALL") {
-  //     setSelected(checked ? products.map((p) => p.id) : []);
-  //     return;
-  //   }
-
-  //   setSelected((prev) =>
-  //     checked ? [...prev, id] : prev.filter((x) => x !== id)
-  //   );
-  // }
-  // useEffect(() => {
-  //   setSelected([]);
-  // }, [products]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [products]);
 
 
   async function refreshProducts(filters?: Record<string, string>) {
@@ -99,8 +81,6 @@ export default function ProductsClient({
       ) : (
         <ProductGrid
           products={paginatedProducts}
-          // selected={selected}
-          // onToggleSelect={handleToggleSelect}
           onEdit={(product: any) => {
             setSelectedProduct(product);
             setDrawerOpen(true);
@@ -110,7 +90,6 @@ export default function ProductsClient({
               method: 'DELETE',
             });
             await refreshProducts();
-            setSelected([]);
           }}
         />
       )}
@@ -124,8 +103,11 @@ export default function ProductsClient({
           setDrawerOpen(false);
           setSelectedProduct(null);
         }}
-        onSaved={async () => {
+        onSaved={async (savedProduct?: any) => {
           await refreshProducts();
+          if (savedProduct) {
+            setSelectedProduct(savedProduct);
+          }
         }}
       />
       <ProductPagination

@@ -5,6 +5,8 @@ import {
   Pencil,
   Trash2,
 } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
+
 
 export default function ProductGrid({
   products = [],
@@ -82,7 +84,8 @@ export default function ProductGrid({
                   </div>
                 </td>
 
-                <td className={styles.muted}>₹{p.price.toFixed(2)}</td>
+                <td className={styles.muted}>{formatCurrency(p.price)}</td>
+
 
                 {/* CATEGORY */}
                 <td className={styles.muted}>

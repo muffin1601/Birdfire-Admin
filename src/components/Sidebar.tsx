@@ -16,7 +16,7 @@ const navSections = [
       { label: 'Categories', href: '/categories' },
       { label: 'Products', href: '/products' },
       { label: 'Collections', href: '/collections'},
-      { label: 'Orders', href: '#' },
+      { label: 'Orders', href: '/orders' },
       { label: 'Users', href: '#' },
     ],
   },
@@ -51,7 +51,7 @@ export default function Sidebar() {
 
             {section.items.map((item) => (
               <a
-                key={item.href}
+                key={item.label}
                 href={item.href}
                 className={styles.navItem}
               >

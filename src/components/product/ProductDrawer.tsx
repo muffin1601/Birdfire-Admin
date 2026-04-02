@@ -8,7 +8,7 @@ type Props = {
   open: boolean;
   onClose: () => void;
   product?: any;
-  onSaved: () => void;
+  onSaved: (savedProduct?: any) => void;
 };
 
 const EMPTY_FORM = {
@@ -93,7 +93,7 @@ useEffect(() => {
         return;
       }
 
-      await fetch(
+      const res = await fetch(
         product ? `/api/products/${product.id}` : "/api/products",
         {
           method: product ? "PATCH" : "POST",
@@ -113,9 +113,19 @@ useEffect(() => {
           }),
         }
       );
-      console.log(form.is_active, form.is_featured, form.is_new);
-      onSaved();
-      onClose();
+      
+      if (!res.ok) {
+        throw new Error("Failed to save product");
+      }
+
+      const savedProduct = await res.json();
+
+      onSaved(savedProduct);
+      if (product) {
+        onClose();
+      }
+    } catch (err: any) {
+      alert(err.message);
     } finally {
       setLoading(false);
     }
@@ -329,7 +339,7 @@ useEffect(() => {
             disabled={loading}
             onClick={() => handleSubmit(false)}
           >
-            {loading ? "Saving…" : "Publish Product"}
+            {loading ? "Saving…" : "Save Product"}
           </button>
         </footer>
       </div>
