@@ -22,6 +22,7 @@ export default function CollectionDrawer({
     slug: '',
     description: '',
     image_url: '',
+    banner_url: '',
     is_active: true,
   });
 
@@ -67,6 +68,16 @@ export default function CollectionDrawer({
       setLoading(true);
       const url = await uploadCollectionImage(file);
       updateField('image_url', url);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleBannerUpload(file: File) {
+    try {
+      setLoading(true);
+      const url = await uploadCollectionImage(file);
+      updateField('banner_url', url);
     } finally {
       setLoading(false);
     }
@@ -160,13 +171,42 @@ export default function CollectionDrawer({
                 </span>
               )}
 
-              <input
+            <input
                 type="file"
                 accept="image/*"
                 disabled={loading}
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) handleImageUpload(file);
+                }}
+              />
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label>Banner Image (Top Banner)</label>
+
+            <div className={styles.imageUpload}>
+              {form.banner_url ? (
+                <img
+                  src={form.banner_url}
+                  alt="Banner preview"
+                  className={styles.preview}
+                  style={{ height: '100px', objectFit: 'cover' }}
+                />
+              ) : (
+                <span className={styles.placeholder}>
+                  Click to upload banner
+                </span>
+              )}
+
+              <input
+                type="file"
+                accept="image/*"
+                disabled={loading}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleBannerUpload(file);
                 }}
               />
             </div>

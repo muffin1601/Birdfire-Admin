@@ -31,6 +31,7 @@ export async function PATCH(
       slug: body.slug,
       description: body.description ?? null,
       image_url: body.image_url ?? null,
+      banner_url: body.banner_url ?? null,
       image_alt: body.image_alt ?? null,
       is_active: body.is_active,
       sort_order: body.sort_order,
