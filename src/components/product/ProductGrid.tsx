@@ -26,6 +26,7 @@ export default function ProductGrid({
             <th>Price</th>
             <th>Category</th>
             <th>Collection</th>
+            <th>Brand</th>
             <th>Status</th>
             <th>Last updated</th>
             <th>Actions</th> 
@@ -94,6 +95,10 @@ export default function ProductGrid({
                 
                 <td className={styles.muted}>
                   {p.collections?.name ?? "—"}
+                </td>
+
+                <td className={styles.muted}>
+                  {p.brands?.name ?? "—"}
                 </td>
                
                 <td>

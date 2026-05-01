@@ -18,9 +18,11 @@ export default function ProductFilters({ onChange }: Props) {
   const [status, setStatus] = useState("");
   const [category, setCategory] = useState("");
   const [collection, setCollection] = useState("");
+  const [brand, setBrand] = useState("");
 
   const [categories, setCategories] = useState<any[]>([]);
   const [collections, setCollections] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
 
   /* Load categories */
   useEffect(() => {
@@ -36,6 +38,13 @@ export default function ProductFilters({ onChange }: Props) {
       .then((d) => setCollections(Array.isArray(d) ? d : []));
   }, []);
 
+  /* Load brands */
+  useEffect(() => {
+    fetch("/api/brands", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => setBrands(Array.isArray(d) ? d : []));
+  }, []);
+
 
   function apply(overrides?: Partial<Record<string, string>>) {
     const filters: Record<string, string> = {
@@ -43,6 +52,7 @@ export default function ProductFilters({ onChange }: Props) {
       ...(status ? { active: status } : {}),
       ...(category ? { category } : {}),
       ...(collection ? { collection } : {}),
+      ...(brand ? { brand } : {}),
       ...overrides,
     };
 
@@ -121,6 +131,26 @@ export default function ProductFilters({ onChange }: Props) {
           {collections.map((col) => (
             <option key={col.id} value={col.id}>
               {col.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Brand */}
+      <div className={styles.selectWrap}>
+        <Layers size={16} className={styles.icon} />
+        <select
+          className={styles.select}
+          value={brand}
+          onChange={(e) => {
+            setBrand(e.target.value);
+            apply({ brand: e.target.value || "" });
+          }}
+        >
+          <option value="">All brands</option>
+          {brands.map((b) => (
+            <option key={b.id} value={b.id}>
+              {b.name}
             </option>
           ))}
         </select>

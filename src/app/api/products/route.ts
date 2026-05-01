@@ -8,13 +8,11 @@ export async function GET(req: Request) {
   const supabase = createSupabaseServer();
   const { searchParams } = new URL(req.url);
 
-  let query = supabase
-    .from("products")
-    .select(
-      `
+  const selectQuery = `
       *,
       categories(name),
       collections(name),
+      brands(name),
       product_images:product_images!product_images_product_id_fkey (
         id,
         image_url,
@@ -22,8 +20,11 @@ export async function GET(req: Request) {
         is_primary,
         sort_order
       )
-    `
-    )
+    `;
+
+  let query = supabase
+    .from("products")
+    .select(selectQuery)
     .order("created_at", { ascending: false });
 
   /*  Search */
@@ -52,10 +53,39 @@ export async function GET(req: Request) {
     query = query.eq("collection_id", collection);
   }
 
+  const brand = searchParams.get("brand");
+  if (brand) {
+    query = query.eq("brand_id", brand);
+  }
+
   const { data, error } = await query;
 
   if (error) {
-    console.error("Products fetch error:", error);
+    console.error("Products fetch error DETAILS:", error);
+    
+    // FALLBACK: If relationship fails, fetch without brands
+    if (error.message.includes("relationship")) {
+       const fallbackSelect = `
+        *,
+        categories(name),
+        collections(name),
+        product_images:product_images!product_images_product_id_fkey (
+          id,
+          image_url,
+          image_type,
+          is_primary,
+          sort_order
+        )
+      `;
+      const { data: fallbackData, error: fallbackError } = await supabase
+        .from("products")
+        .select(fallbackSelect)
+        .order("created_at", { ascending: false });
+        
+       if (fallbackError) return NextResponse.json({ error: fallbackError.message }, { status: 500 });
+       return NextResponse.json(fallbackData);
+    }
+
     return NextResponse.json(
       { error: error.message },
       { status: 500 }
@@ -80,6 +110,7 @@ export async function POST(req: Request) {
       description: body.description || null,
       category_id: body.category_id || null,
       collection_id: body.collection_id || null,
+      brand_id: body.brand_id || null,
       stock: Number(body.stock) || 0,
       price: body.price ? Number(body.price) : null,
       compare_price: body.compare_price ? Number(body.compare_price) : null,

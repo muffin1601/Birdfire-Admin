@@ -1,0 +1,98 @@
+.card {
+  background: #161a20;
+  border: 1px solid #232938;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logoContainer {
+  width: 60px;
+  height: 60px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+}
+
+.logoPlaceholder {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+}
+
+.info {
+  flex: 1;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.slug {
+  font-size: 12px;
+  color: #9aa4b2;
+  margin: 2px 0 6px;
+}
+
+.status {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.status.active {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.status.inactive {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.count {
+  font-size: 12px;
+  color: #9aa4b2;
+  margin-top: 8px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.editBtn,
+.deleteBtn {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 0px;
+  border: 1px solid #232938;
+  background: #1f2430;
+  color: #eaecef;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.editBtn:hover {
+  border-color: #f97316;
+  color: #f97316;
+}
+
+.deleteBtn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}

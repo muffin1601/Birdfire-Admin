@@ -21,6 +21,7 @@ const EMPTY_FORM = {
   stock: 0,
   category_id: "",
   collection_id: "",
+  brand_id: "",
   is_active: false,
   is_featured: false,
   is_new: false,
@@ -36,6 +37,7 @@ export default function ProductDrawer({
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [collections, setCollections] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
   const [showMedia, setShowMedia] = useState(false);
 
   /* Load product */
@@ -48,6 +50,11 @@ export default function ProductDrawer({
     setForm({
       ...EMPTY_FORM,
       ...product,
+      category_id: product.category_id || "",
+      collection_id: product.collection_id || "",
+      brand_id: product.brand_id || "",
+      description: product.description || "",
+      short_description: product.short_description || "",
       is_active: Boolean(product.is_active),
       is_featured: Boolean(product.is_featured),
       is_new: Boolean(product.is_new),
@@ -71,6 +78,16 @@ useEffect(() => {
     .then(d =>
       setCollections(
         Array.isArray(d) ? d.filter(c => c.is_active) : []
+      )
+    );
+}, []);
+
+useEffect(() => {
+  fetch('/api/brands', { cache: 'no-store' })
+    .then(r => r.json())
+    .then(d =>
+      setBrands(
+        Array.isArray(d) ? d.filter(b => b.is_active) : []
       )
     );
 }, []);
@@ -181,6 +198,24 @@ useEffect(() => {
                   {collections.map((col) => (
                     <option key={col.id} value={col.id}>
                       {col.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.field}>
+                <label>Brand</label>
+                <select
+                  className={styles.input}
+                  value={form.brand_id}
+                  onChange={(e) =>
+                    updateField("brand_id", e.target.value)
+                  }
+                >
+                  <option value="">Select brand</option>
+                  {brands.map((brand) => (
+                    <option key={brand.id} value={brand.id}>
+                      {brand.name}
                     </option>
                   ))}
                 </select>

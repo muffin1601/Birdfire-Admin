@@ -1,0 +1,64 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.addBtn {
+  background: #f97316;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addBtn:hover {
+  background: #fb923c;
+}
+
+.emptyState {
+  background: #161a20;
+  border: 1px dashed #232938;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.emptyState p {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.emptyState span {
+  color: #9aa4b2;
+  font-size: 14px;
+}
+
+.emptyCta {
+  margin-top: 12px;
+  background: #f97316;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
