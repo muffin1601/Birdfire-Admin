@@ -4,15 +4,16 @@ import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await requireAdmin();
+  const { id } = await context.params;
   const supabase = createSupabaseServer();
 
   const { data, error } = await supabase
     .from('brands')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (error) {
@@ -24,9 +25,10 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await requireAdmin();
+  const { id } = await context.params;
   const supabase = createSupabaseServer();
   const body = await req.json();
 
@@ -40,7 +42,7 @@ export async function PATCH(
       is_active: body.is_active,
       sort_order: body.sort_order,
     })
-    .eq('id', params.id)
+    .eq('id', id)
     .select()
     .single();
 
@@ -53,15 +55,16 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await requireAdmin();
+  const { id } = await context.params;
   const supabase = createSupabaseServer();
 
   const { error } = await supabase
     .from('brands')
     .delete()
-    .eq('id', params.id);
+    .eq('id', id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
